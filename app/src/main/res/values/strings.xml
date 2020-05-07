@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MockLocation</string>
+    <string name="button">Start mocked location service</string>
+    <string name="latitudeText"><![CDATA[<latitude>]]></string>
+    <string name="longitudeText"><![CDATA[<longitude>]]></string>
+</resources>
