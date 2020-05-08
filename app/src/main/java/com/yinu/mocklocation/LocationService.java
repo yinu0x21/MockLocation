@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -148,7 +149,7 @@ public class LocationService extends Service {
                     GPS_PROVIDER,
                     true, false, false, false,
                     true, true, true,
-                    0, 5
+                    Criteria.POWER_LOW, Criteria.ACCURACY_FINE
             );
         } catch (Exception e) {
             Log.w(TAG, e.getMessage());
