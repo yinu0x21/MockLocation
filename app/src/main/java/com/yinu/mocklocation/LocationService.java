@@ -85,8 +85,12 @@ public class LocationService extends Service {
             }
 
             Bundle extras = intent.getExtras();
-            String[] latlon = extras != null ? extras.getStringArray("latlon") : new String[0];
-            if (latlon.length == 2) {
+            if (extras == null) {
+                return;
+            }
+
+            String[] latlon = extras.getStringArray("latlon");
+            if (latlon != null && latlon.length == 2) {
                 updateLocation(Double.parseDouble(latlon[0]), Double.parseDouble(latlon[1]));
             }
         }
@@ -122,21 +126,26 @@ public class LocationService extends Service {
                     true, true, true,
                     Criteria.POWER_LOW, Criteria.ACCURACY_FINE
             );
-        } catch (Exception e) {
-            Log.w(TAG, e.getMessage());
+        } catch (IllegalArgumentException | SecurityException e) {
+            Log.w(TAG, "addTestProvider" + e.getMessage());
+            // OK, but I go through
         }
         try {
             mLocationManager.setTestProviderEnabled(GPS_PROVIDER, true);
-        } catch (Exception e) {
-            Log.w(TAG, e.getMessage());
+        } catch (IllegalArgumentException | SecurityException e) {
+            Log.w(TAG, "setTestProviderEnabled" + e.getMessage());
         }
 
     }
 
     private void removeProvider() {
         mLocationManager.removeUpdates(mLocationListener);
-        mLocationManager.setTestProviderEnabled(GPS_PROVIDER, false);
-        mLocationManager.removeTestProvider(GPS_PROVIDER);
+        try {
+            mLocationManager.setTestProviderEnabled(GPS_PROVIDER, false);
+            mLocationManager.removeTestProvider(GPS_PROVIDER);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateLocation(double latitude, double longitude) {
