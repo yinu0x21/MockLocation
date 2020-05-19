@@ -18,9 +18,14 @@ This app is for GPS location testing.
 1. Tap "Start mocked location service" button
 1. Send broadcast intent via adb as follows;
     * `adb shell am broadcast -a inject_location --esa latlon "48.873792,2.295028"`
+    * Or, `adb shell am boradcast -a --es uri "https://foo/bar.gpx"`
 1. You can see lat & lon change in app screen
 
 
 ## TODO
 
 * Make enable to receive other Location element (time, attlitude...)
+
+## 3rd party libraries
+
+* [ticofab/android-gpx-parser](https://github.com/ticofab/android-gpx-parser)
