@@ -144,7 +144,7 @@ public class LocationService extends Service {
             mLocationManager.setTestProviderEnabled(GPS_PROVIDER, false);
             mLocationManager.removeTestProvider(GPS_PROVIDER);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         }
     }
 
