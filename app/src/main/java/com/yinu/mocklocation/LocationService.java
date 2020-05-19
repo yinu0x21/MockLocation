@@ -33,10 +33,12 @@ public class LocationService extends Service {
     private static final String INTENT_ACTION = "inject_location";
 
     private LocationManager mLocationManager;
+    private GpsChoreographer mGpsChoreographer;
 
     @Override
     public void onCreate() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mGpsChoreographer = new GpsChoreographer(this, this::updateLocation);
     }
 
     @Nullable
@@ -63,12 +65,14 @@ public class LocationService extends Service {
 
         enableProvider();
         registerReceiver(mInjectionReceiver, new IntentFilter(INTENT_ACTION));
+        mGpsChoreographer.start();
 
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
+        mGpsChoreographer.quitSafely();
         removeProvider();
     }
 
@@ -148,10 +152,14 @@ public class LocationService extends Service {
         }
     }
 
-    private void updateLocation(double latitude, double longitude) {
-        Location location = makeLocation(latitude, longitude);
+    private void updateLocation(Location location) {
         Log.d(TAG, "updateLocation " + location);
         mLocationManager.setTestProviderLocation(GPS_PROVIDER, location);
+    }
+
+    private void updateLocation(double latitude, double longitude) {
+        Location location = makeLocation(latitude, longitude);
+        updateLocation(location);
     }
 
     private Location makeLocation(double latitude, double longitude) {
